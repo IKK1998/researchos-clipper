@@ -1,0 +1,13 @@
+name: Lua tests
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y lua5.4
+      - run: lua5.4 tests/logic.lua
+      - run: lua5.4 tests/client.lua
+      - run: luac5.4 -p ResearchClipper.spoon/init.lua
