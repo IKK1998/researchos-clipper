@@ -28,12 +28,13 @@ async function websiteRequest(site, path, method = 'GET', data) {
       if (location.origin !== site) return {error: '请先登录 ResearchOS'};
       try {
         const r = await fetch(path, {method, credentials: 'same-origin', redirect: 'error',
-          headers: {'Content-Type': 'application/json'}, body: data === undefined ? undefined : JSON.stringify(data),
+          headers: {'Content-Type': 'application/json'},
+          body: method === 'GET' || method === 'HEAD' ? undefined : JSON.stringify(data),
           signal: AbortSignal.timeout(25000)});
         if (!r.ok) return {error: '网站请求未确认（' + r.status + '）'};
         return {data: await r.json()};
       } catch { return {error: '网站连接未确认，稍后自动继续'}; }
-    }, args: [site, path, method, data]});
+    }, args: [site, path, method, data ?? null]});
   const result = results[0]?.result;
   if (!result?.data) throw new Error(result?.error || '请先登录网站');
   return result.data;

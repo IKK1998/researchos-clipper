@@ -12,6 +12,7 @@ test('saved link resumes after offline failure and title is confirmed in existin
     tabs: {query: async () => [{id: 1, url: 'https://researchos.cacdb.org/topics'}],
       create: async () => ({id: 2}), get: async () => ({id: 2, url}), remove: async () => {}, onUpdated: {addListener() {}}},
     scripting: {executeScript: async ({args}) => {
+      assert(args.every(value => value !== undefined), 'Chrome rejects undefined script arguments');
       if (args.length === 1) return [{result: '从浏览器读取的真实标题'}];
       if (!online) return [{result: {error: 'offline'}}];
       const path = args[1], body = args[3];
