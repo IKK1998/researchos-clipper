@@ -14,12 +14,14 @@ const TITLE='合成标题测试（非真实文章）';
 const profile=await mkdtemp(path.join(tmpdir(),'researchos-clipper-ci-'));
 const out=path.resolve('artifacts/browser-runtime'); await mkdir(out,{recursive:true});
 const sources=new Map(); let captures=0; let offline=false;
+const requests=[];
 const extension=path.resolve('extension');
 const evidence={synthetic_network:true,real_chromium_extension:true};
 
 async function attachRoutes(context) {
   await context.route('**/*',async route=>{
     const req=route.request(), u=new globalThis.URL(req.url());
+    requests.push({url:req.url(),method:req.method()});
     if(u.protocol==='chrome-extension:') return route.continue();
     if(u.origin===SITE) {
       if(offline) return route.fulfill({status:503,body:'offline fixture'});
@@ -66,12 +68,12 @@ async function message(popup,data) {
   return popup.evaluate(data=>chrome.runtime.sendMessage(data),data);
 }
 async function settle(popup,url) {
-  for(let i=0;i<20;i++) {
+  for(let i=0;i<40;i++) {
     await message(popup,{type:'retry'});
     const jobs=await popup.evaluate(async()=> (await chrome.storage.local.get('jobs')).jobs||[]);
     const job=jobs.find(j=>j.url===url);
     if(job?.state==='done') return job;
-    await new Promise(resolve=>setTimeout(resolve,100));
+    await new Promise(resolve=>setTimeout(resolve,250));
   }
   throw new Error('Real browser queue did not complete');
 }
@@ -97,4 +99,10 @@ try {
   evidence.browser_restart_recovery='passed';
   await writeFile(path.join(out,'acceptance.json'),JSON.stringify(evidence,null,2));
   console.log(JSON.stringify(evidence));
+} catch(error) {
+  const jobs=await run.popup.evaluate(async()=> (await chrome.storage.local.get('jobs')).jobs||[]).catch(()=>[]);
+  const state={error:error.message,jobs,requests,sources:[...sources.values()],captures};
+  await writeFile(path.join(out,'failure.json'),JSON.stringify(state,null,2));
+  await run.popup.screenshot({path:path.join(out,'synthetic-failure.png')}).catch(()=>{});
+  console.error(JSON.stringify(state)); throw error;
 } finally {await run.context.close();}
