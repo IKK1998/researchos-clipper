@@ -1,5 +1,9 @@
 # ResearchOS Clipper 0.6 preview
 
+**Browser users: use [v0.6.1](https://github.com/IKK1998/researchos-clipper/releases/tag/v0.6.1).**
+The 0.6.0 browser ZIP has a Chrome argument-serialization defect. Mac Spoon
+0.6.0 is unaffected. The older browser download instructions below are superseded.
+
 Mac collection now obtains real article titles through a dedicated Chrome window,
 repairs untitled existing records through the existing API and confirms saved
 titles by readback. The persistent queue resumes after Hammerspoon restart or
