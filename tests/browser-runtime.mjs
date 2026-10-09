@@ -77,7 +77,8 @@ async function settle(popup,url,context) {
     // Chrome can start extension-created navigation before Playwright attaches
     // interception. DNS is intentionally blocked, so load only this synthetic
     // page again once the browser target is attached to the test context.
-    const article=context.pages().find(p=>p.url()===url||p.url()==='chrome-error://chromewebdata/');
+    const article=context.pages().find(p=>p.url()==='chrome-error://chromewebdata/')
+      ||context.pages().find(p=>p.url()===url);
     if(article&&!fixtureNavigation) {fixtureNavigation=true;await article.goto(url);}
     await new Promise(resolve=>setTimeout(resolve,250));
   }
