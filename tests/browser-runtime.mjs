@@ -44,10 +44,10 @@ async function attachRoutes(context) {
         }
         return route.fulfill({json:{source}});
       }
-      return route.fulfill({contentType:'text/html',body:'<h1>CI synthetic ResearchOS — not production</h1>'});
+      return route.fulfill({contentType:'text/html; charset=utf-8',body:'<h1>CI synthetic ResearchOS — not production</h1>'});
     }
     if(req.url()===URL||req.url()===URL2)
-      return route.fulfill({contentType:'text/html',body:`<title>${TITLE}</title><h1 id="activity-name">${TITLE}</h1>`});
+      return route.fulfill({contentType:'text/html; charset=utf-8',body:`<meta charset="utf-8"><title>${TITLE}</title><h1 id="activity-name">${TITLE}</h1>`});
     // Refuse every unplanned outbound request, including real WeChat articles.
     return route.abort();
   });
@@ -77,7 +77,7 @@ async function settle(popup,url,context) {
     // Chrome can start extension-created navigation before Playwright attaches
     // interception. DNS is intentionally blocked, so load only this synthetic
     // page again once the browser target is attached to the test context.
-    const article=context.pages().find(p=>p.url()===url);
+    const article=context.pages().find(p=>p.url()===url||p.url()==='chrome-error://chromewebdata/');
     if(article&&!fixtureNavigation) {fixtureNavigation=true;await article.goto(url);}
     await new Promise(resolve=>setTimeout(resolve,250));
   }
