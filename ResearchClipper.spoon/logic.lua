@@ -1,4 +1,30 @@
 local M = {}
+function M.title(text)
+  if type(text)~='string' then return '' end
+  text=text:gsub('[\000-\031\127]',' '):match('^ *(.-) *$')
+  local placeholders={['微信']=true,['WeChat']=true,['微信读书']=true,['微信公众平台']=true,
+    ['微信公众号文章']=true,['公众号链接（标题待获取）']=true,['未知错误']=true,
+    ['环境异常']=true,['安全验证']=true,['验证']=true,['请完成验证']=true,
+    ['Just a moment...']=true,['Access denied']=true,['about:blank']=true}
+  if #text>1000 or text:match('^https?://') or placeholders[text] then return '' end
+  return text
+end
+function M.articleTitle(copiedURL, documentURL, windowTitle)
+  if M.link(documentURL)~=copiedURL then return '' end
+  return M.title(windowTitle)
+end
+function M.reader(bundle)
+  return bundle=='com.tencent.xinWeChat' or bundle=='com.tencent.flue.WeChatAppEx'
+end
+-- A title is trusted only when the SAME pasteboard item carries its exact URL.
+function M.clipboardTitle(copiedURL, itemURL, itemTitle, before, after)
+  if before==nil or before~=after then return '' end
+  return M.articleTitle(copiedURL,itemURL,itemTitle)
+end
+function M.chooseTitle(a,b)
+  if a~='' and b~='' and a~=b then return '' end
+  return a~='' and a or b
+end
 function M.link(text)
   if type(text) ~= 'string' or #text > 4096 then return nil end
   local value = text:match('^%s*(.-)%s*$')

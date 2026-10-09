@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "ResearchOS Clipper",
+  "version": "0.6.0",
+  "description": "Collect WeChat articles with their real titles into your signed-in ResearchOS website.",
+  "permissions": ["storage", "scripting", "alarms", "activeTab"],
+  "host_permissions": ["https://mp.weixin.qq.com/*", "https://researchos.cacdb.org/*"],
+  "optional_host_permissions": ["https://*/*"],
+  "background": {"service_worker": "background.js", "type": "module"},
+  "action": {"default_popup": "popup.html", "default_title": "收藏到 ResearchOS"},
+  "options_page": "options.html",
+  "commands": {"collect-active": {"suggested_key": {"default": "Alt+Shift+S"}, "description": "Collect current WeChat article"}}
+}

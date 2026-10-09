@@ -4,6 +4,8 @@ local text='https://mp.weixin.qq.com/s/Example123'
 local callback,timeout,hotkey,lastAlert,requestPayload
 local receipt={saved=true,source_id='12345678-1234-1234-1234-123456789abc'}
 hs={
+ application={frontmostApplication=function() return {bundleID=function() return 'com.tencent.xinWeChat' end,focusedWindow=function() return {title=function() return '测试文章标题' end} end} end},
+ axuielement={windowElement=function() return {attributeValue=function() return text end} end},
  pasteboard={getContents=function() reads=reads+1;return text end},
  alert={show=function(s) lastAlert=s end},
  json={encode=function(v) requestPayload=v;return '{}' end,decode=function() return receipt end},
@@ -20,6 +22,7 @@ hs={
 local app=dofile('ResearchClipper.spoon/init.lua'):start()
 assert(reads==0 and posts==0) -- startup does not inspect clipboard
 hotkey();assert(reads==1 and posts==1 and requestPayload.ai_consent==false)
+assert(requestPayload.title=='测试文章标题')
 hotkey();assert(reads==1 and posts==1) -- no parallel replays
 timeout();assert(app.busy and lastAlert:find('30'))
 callback(200,'{}');assert(not app.busy and lastAlert:find('延迟响应'))
@@ -27,4 +30,8 @@ text='private non-URL clipboard text';hotkey();assert(posts==1)
 text='https://mp.weixin.qq.com/s/Example123';hotkey();callback(403,'{}')
 assert(lastAlert:find('拒绝') and posts==2)
 app:stop();assert(hotkey==nil)
+app:start()
+hs.axuielement.windowElement=function() return {attributeValue=function() return 'https://mp.weixin.qq.com/s/Different' end} end
+hotkey();assert(requestPayload.title=='');callback(200,'{}')
+app:stop()
 print('PASS: client startup, key binding, clipboard gating, busy guard, timeout, delayed receipt, invalid input, denial, stop')

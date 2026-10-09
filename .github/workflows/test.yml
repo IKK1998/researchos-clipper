@@ -10,4 +10,12 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y lua5.4
       - run: lua5.4 tests/logic.lua
       - run: lua5.4 tests/client.lua
+      - run: lua5.4 tests/capture.lua
+      - run: lua5.4 tests/title_flow.lua
+      - run: lua5.4 tests/titles.lua
       - run: luac5.4 -p ResearchClipper.spoon/init.lua
+      - run: luac5.4 -p ResearchClipper.spoon/titles.lua
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm test
