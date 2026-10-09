@@ -1,5 +1,21 @@
 # Verification — 2026-09-22
 
+## Browser preview 0.6.1 — 2026-10-09
+
+- Real bundled Chromium loaded the actual MV3 extension and passed title capture
+  with API readback, duplicate-title preservation, offline pending persistence
+  and browser restart recovery. [CI run](https://github.com/IKK1998/researchos-clipper/actions/runs/37915516737),
+  tested commit `3f2b06f066792b415e2a0ea59930cdc8a2bd4423`.
+- All network article/API responses in that runtime test are synthetic fixtures;
+  real site DNS is blocked. New extension targets are explicitly re-navigated to
+  isolated fixtures after Playwright attaches. No production source is contacted.
+  This does not prove actual public authentication or live WeChat capture.
+- Chromium exposed and confirmed the fix for unserializable `undefined` GET
+  arguments in 0.6.0. Browser users should use 0.6.1, not the old preview ZIP.
+- The current desktop control connection still times out. Current-computer
+  extension installation, public signed-in UI and Windows/Edge acceptance remain
+  outstanding. No store listing or whole-machine reboot is claimed.
+
 ## Version 0.6 acceptance — 2026-10-09
 
 - Installed Mac version 0.6; existing Option+S binding preserved.
