@@ -67,12 +67,18 @@ async function launch() {
 async function message(popup,data) {
   return popup.evaluate(data=>chrome.runtime.sendMessage(data),data);
 }
-async function settle(popup,url) {
+async function settle(popup,url,context) {
+  let fixtureNavigation=false;
   for(let i=0;i<40;i++) {
     await message(popup,{type:'retry'});
     const jobs=await popup.evaluate(async()=> (await chrome.storage.local.get('jobs')).jobs||[]);
     const job=jobs.find(j=>j.url===url);
     if(job?.state==='done') return job;
+    // Chrome can start extension-created navigation before Playwright attaches
+    // interception. DNS is intentionally blocked, so load only this synthetic
+    // page again once the browser target is attached to the test context.
+    const article=context.pages().find(p=>p.url()===url);
+    if(article&&!fixtureNavigation) {fixtureNavigation=true;await article.goto(url);}
     await new Promise(resolve=>setTimeout(resolve,250));
   }
   throw new Error('Real browser queue did not complete');
@@ -81,7 +87,7 @@ let run=await launch();
 try {
   await run.popup.locator('#url').fill(URL);
   await run.popup.locator('#save').click();
-  const job=await settle(run.popup,URL);
+  const job=await settle(run.popup,URL,run.context);
   assert.equal(job.title,TITLE);assert.equal(sources.get(ID).provenance.title,TITLE);assert.equal(captures,1);
   evidence.title_capture_and_readback='passed';
   await run.popup.screenshot({path:path.join(out,'synthetic-title-result.png')});
@@ -94,14 +100,14 @@ try {
   assert(pending.some(j=>j.url===URL2&&j.state!=='done'));
   await run.context.close();
   offline=false;run=await launch();
-  const resumed=await settle(run.popup,URL2);
+  const resumed=await settle(run.popup,URL2,run.context);
   assert.equal(resumed.title,TITLE);assert.equal(sources.get(ID2).provenance.title,TITLE);assert.equal(captures,2);
   evidence.browser_restart_recovery='passed';
   await writeFile(path.join(out,'acceptance.json'),JSON.stringify(evidence,null,2));
   console.log(JSON.stringify(evidence));
 } catch(error) {
   const jobs=await run.popup.evaluate(async()=> (await chrome.storage.local.get('jobs')).jobs||[]).catch(()=>[]);
-  const state={error:error.message,jobs,requests,sources:[...sources.values()],captures};
+  const state={error:error.message,jobs,requests,pages:run.context.pages().map(p=>p.url()),sources:[...sources.values()],captures};
   await writeFile(path.join(out,'failure.json'),JSON.stringify(state,null,2));
   await run.popup.screenshot({path:path.join(out,'synthetic-failure.png')}).catch(()=>{});
   console.error(JSON.stringify(state)); throw error;
