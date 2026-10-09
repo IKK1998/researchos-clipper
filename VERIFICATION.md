@@ -1,4 +1,4 @@
-# Verification — 2026-09-22
+# Verification
 
 ## Browser preview 0.6.1 — 2026-10-09
 
