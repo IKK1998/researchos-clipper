@@ -68,7 +68,7 @@ async function message(popup,data) {
   return popup.evaluate(data=>chrome.runtime.sendMessage(data),data);
 }
 async function settle(popup,url,context) {
-  let fixtureNavigation=false;
+  const navigated=new WeakSet();
   for(let i=0;i<40;i++) {
     await message(popup,{type:'retry'});
     const jobs=await popup.evaluate(async()=> (await chrome.storage.local.get('jobs')).jobs||[]);
@@ -79,8 +79,8 @@ async function settle(popup,url,context) {
     // page again once the browser target is attached to the test context.
     // Restored tabs can already carry the same URL. Only navigate the fresh
     // DNS-blocked target; otherwise we might repair the old tab, not job.tabId.
-    const article=context.pages().find(p=>p.url()==='chrome-error://chromewebdata/');
-    if(article&&!fixtureNavigation) {fixtureNavigation=true;await article.goto(url);}
+    const article=context.pages().find(p=>p.url()==='chrome-error://chromewebdata/'&&!navigated.has(p));
+    if(article) {navigated.add(article);await article.goto(url);}
     await new Promise(resolve=>setTimeout(resolve,250));
   }
   throw new Error('Real browser queue did not complete');
