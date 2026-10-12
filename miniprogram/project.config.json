@@ -1,0 +1,8 @@
+{
+  "description": "ResearchOS mobile collection preview; replace touristappid after registration",
+  "appid": "touristappid",
+  "projectname": "ResearchOS Clipper",
+  "compileType": "miniprogram",
+  "miniprogramRoot": "./",
+  "setting": {"es6": true, "minified": true, "urlCheck": true}
+}

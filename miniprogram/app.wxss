@@ -1,0 +1,4 @@
+page { background: #f7f8f7; color: #263532; font-family: sans-serif; }
+button { border-radius: 8rpx; font-size: 28rpx; }
+button::after { border: 0; }
+input, textarea { box-sizing: border-box; }

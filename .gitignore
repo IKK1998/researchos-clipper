@@ -11,3 +11,6 @@ mobile/queue/
 *.secret
 receiver.lock
 receiver-start.lock
+mini-receiver.lock
+mini-start.lock
+miniprogram/project.private.config.json

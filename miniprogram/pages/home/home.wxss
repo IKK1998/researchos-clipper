@@ -1,0 +1,17 @@
+.page { padding: 48rpx 36rpx; }
+.brand { color: #526d64; font-size: 25rpx; letter-spacing: 2rpx; }
+.heading { font-size: 44rpx; margin: 20rpx 0; font-weight: 600; }
+.intro { color: #6c7873; font-size: 28rpx; line-height: 1.7; margin-bottom: 40rpx; }
+.section { background: #fff; padding: 28rpx; margin-top: 24rpx; border: 1rpx solid #dde3df; }
+.label { font-size: 30rpx; font-weight: 600; }
+.field { width: 100%; padding: 20rpx; margin: 24rpx 0; border: 1rpx solid #ccd6d0; font-size: 28rpx; height: 86rpx; }
+.link { height: 160rpx; }
+.actions { display: flex; gap: 20rpx; }.actions button { flex: 1; margin: 0; }
+.primary { background: #345a4b; color: #fff; }.secondary { background: #ecf1ee; color: #345a4b; }
+.note { font-size: 24rpx; line-height: 1.7; color: #78827c; margin-top: 16rpx; }
+.message { padding: 24rpx 0; color: #7d533d; font-size: 28rpx; }
+.section-head { display: flex; align-items: center; justify-content: space-between; }
+.text { background: transparent; color: #345a4b; font-size: 25rpx; padding: 0; margin: 0; text-align: left; }
+.entry { border-top: 1rpx solid #e3e7e4; padding: 24rpx 0; margin-top: 20rpx; }
+.title { font-size: 30rpx; line-height: 1.6; }.url { font-size: 24rpx; color: #78827c; word-break: break-all; line-height: 1.6; margin: 16rpx 0; }
+.footer { margin: 36rpx 0; }.muted { color: #78827c; margin-top: 16rpx; }

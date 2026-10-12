@@ -1,0 +1,5 @@
+{
+  "pages": ["pages/home/home"],
+  "window": {"navigationBarTitleText": "ResearchOS 收藏", "navigationBarTextStyle": "black", "navigationBarBackgroundColor": "#ffffff", "backgroundColor": "#f7f8f7"},
+  "style": "v2"
+}

@@ -1,5 +1,21 @@
 # Privacy
 
+## Mini-program development preview
+
+Clipboard reading occurs only after an explicit Paste tap and, where supported,
+privacy authorization. Manual pasting remains available. No WeChat message,
+like/favorite list, cookie or clipboard history is read. The phone stores a
+30-day scoped device token and up to 20 unsubmitted URL drafts. Logging out
+removes the local token, not drafts or website records; protect shared phones.
+
+The separate server stores hashed one-time pairing codes/device tokens, article
+URLs, titles and receipts in a bounded private queue. A phone sees only its own
+receipts and receives no upstream API credential. The server sends URL and
+optional supplied title to ResearchOS with AI consent=false. It does not fetch
+article pages itself. Operators must provide HTTPS, private backups, retention,
+device revocation and platform privacy declarations before release. This preview
+has not been deployed or audited on a real phone.
+
 ResearchOS Clipper processes articles that you explicitly collect. The Mac
 shortcut reads the current clipboard only when invoked. The extension receives
 a URL you paste or the active article you explicitly collect.

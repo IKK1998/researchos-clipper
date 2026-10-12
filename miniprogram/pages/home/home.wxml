@@ -1,0 +1,38 @@
+<view class="page">
+  <view class="brand">ResearchOS</view>
+  <view class="heading">随手收藏，回到研究。</view>
+  <view class="intro">在微信文章中复制链接，在这里保存到同一个资料库。</view>
+  <view wx:if="!paired" class="section">
+    <view class="label">首次连接资料库</view>
+    <input class="field" password value="{{code}}" bindinput="inputCode" placeholder="输入管理员提供的一次性配对码" maxlength="32" />
+    <button class="primary" loading="{{busy}}" disabled="{{busy}}" bindtap="pair">连接资料库</button>
+    <view class="note">只在本机保存受限设备凭据，不需要网站后台密钥。</view>
+  </view>
+  <view wx:else class="section">
+    <textarea class="field link" value="{{url}}" bindinput="inputUrl" placeholder="粘贴公众号文章链接" maxlength="4096" />
+    <view class="actions">
+      <button class="secondary" bindtap="paste">粘贴链接</button>
+      <button class="primary" loading="{{busy}}" disabled="{{busy}}" bindtap="save">收藏到资料库</button>
+    </view>
+    <view class="note">仅点击“粘贴链接”时读取剪贴板。保存链接不代表正文或标题已获取。</view>
+  </view>
+  <view wx:if="message" class="message">{{message}}</view>
+  <view wx:if="drafts.length" class="section">
+    <view class="label">本机待提交</view>
+    <view wx:for="{{drafts}}" wx:key="url" class="entry">
+      <view class="url">{{item.url}}</view>
+      <button class="secondary" disabled="{{busy}}" data-url="{{item.url}}" bindtap="save">重试提交</button>
+    </view>
+  </view>
+  <view wx:if="paired" class="section">
+    <view class="section-head"><view class="label">本设备最近收藏</view><button class="text" bindtap="refresh">刷新</button></view>
+    <view wx:if="!items.length" class="note">尚无收藏。先保存一篇文章试试。</view>
+    <view wx:for="{{items}}" wx:key="id" class="entry">
+      <view class="title">{{item.title || '公众号文章（标题待获取）'}}</view>
+      <view class="note">{{item.label}}</view>
+      <view wx:if="!item.title" class="url">{{item.url}}</view>
+      <button class="text" data-url="{{item.url}}" bindtap="copyArticle">复制原文链接</button>
+    </view>
+  </view>
+  <view class="footer"><button class="text" bindtap="copyWebsite">复制网站地址，继续阅读与提问</button><button wx:if="paired" class="text muted" bindtap="disconnect">退出本机配对</button></view>
+</view>

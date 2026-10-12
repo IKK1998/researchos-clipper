@@ -145,15 +145,19 @@ export class Queue {
   }
 }
 
-export function validateConfig(c) {
-  if (!/^[A-Za-z0-9]{3,32}$/.test(c.token || '') || !/^wx[A-Za-z0-9]+$/.test(c.appId || '') || !c.accountId
-      || !c.allowedUsers?.length || c.allowedUsers.some((u) => !u) || !c.apiToken) throw new Rejected('configuration');
-  keyFor(c);
+export function validateAPIConfig(c) {
+  if (!c.apiToken) throw new Rejected('configuration');
   const u = new URL(c.apiBase), page = new URL(c.siteBase);
   if (u.username || u.password || u.search || u.hash || (u.pathname !== '/' && u.pathname !== '')
       || !(u.protocol === 'https:' || (u.protocol === 'http:' && u.hostname === '127.0.0.1'))
       || page.protocol !== 'https:' || page.username || page.password || page.search || page.hash || page.pathname !== '/') throw new Rejected('endpoint');
   return c;
+}
+export function validateConfig(c) {
+  if (!/^[A-Za-z0-9]{3,32}$/.test(c.token || '') || !/^wx[A-Za-z0-9]+$/.test(c.appId || '') || !c.accountId
+      || !c.allowedUsers?.length || c.allowedUsers.some((u) => !u)) throw new Rejected('configuration');
+  keyFor(c);
+  return validateAPIConfig(c);
 }
 
 export class UpstreamError extends Error {

@@ -1,5 +1,21 @@
 # Verification
 
+## Mini-program development preview — 2026-10-12
+
+- Added a one-page mini-program and independent loopback collector in the existing
+  repository. No production writes, schema/auth changes, credentials or model calls.
+- Node22.21.0: `npm test` passed 24 tests (seven mini-program, 15 official-account,
+  two extension). Isolated HTTP bridge tests verified pairing, ownership isolation,
+  deduplication, AI=false, title readback and rejection of unsafe URLs/requests.
+- Pairing expiry/reuse, hashed secret storage, device revocation, queue recreation,
+  offline client drafts, invalid receipts and expired auth were checked.
+- HTTP bridge used injected mock upstream responses, not the actual ResearchOS.
+  Wx client used a mock, not WeChat developer tools. No real AppID, legal-domain
+  setup, privacy consent, phone test, publication or production deployment claimed.
+- Titleless links remain pending, never replaced with fabricated model titles.
+  The timer worker refreshed a pending title and blocked a revoked queued device
+  against a mock. Whole-host reboot and production refresh need live acceptance.
+
 ## Mobile official-account receiver preview — 2026-10-12
 
 - Added `mobile/` in the existing desktop-clipper repository; no separate server

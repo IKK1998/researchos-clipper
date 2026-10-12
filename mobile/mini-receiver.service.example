@@ -1,0 +1,19 @@
+# Template only: confirm remote paths and recovery; not installed.
+[Unit]
+Description=ResearchOS Clipper scoped mini-program collector
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/researchos-clipper
+EnvironmentFile=/etc/researchos-clipper/mini.env
+ExecStart=/usr/bin/node /opt/researchos-clipper/mobile/miniprogram-server.js
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=40
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target
