@@ -1,5 +1,23 @@
 # Verification
 
+## iPhone clipboard and library-link fix — 2026-10-12
+
+- Owner screenshot showed blank input and unpaired-browser message. Replaced
+  implicit ExtensionInput clipboard fallback with explicit Get Clipboard and
+  an output-bound URL extraction action. Public shortcut now has six actions,
+  copy-and-run entry only, and was regenerated and officially signed.
+- Actual remote `/library` returned 404; `/topics` and `/help` returned 200.
+  Corrected phone-page library links to `/topics`. Blank input and unpaired
+  setup now produce distinct guidance and open the setup panel automatically.
+- Repeated Enable preserves the existing local connection code. Disable then
+  Enable rotates it. Setup instructions explicitly require recopying the article
+  after copying the setup code. 31 Node tests passed.
+- FDU `iphone-auto-20261012-v2` activated after audited seven-file dry-run
+  transfer. Live asset hashes/Web health passed, protected service fingerprints
+  and model-call count unchanged; previous image and rollback profile retained.
+- Real iPhone execution of the corrected file remains unverified; the previous
+  screenshots demonstrate why mocked page tests alone cannot establish that.
+
 ## iPhone automatic collection update — 2026-10-12
 
 - Five-action shortcut with import-time browser connection code question; public

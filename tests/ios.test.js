@@ -39,15 +39,14 @@ test('confirmed receipt with failed/mismatched readback is explicit and does not
   assert.equal(posts,1);assert.equal(result.verified,false);assert.equal(result.title,'');
   assert.equal(titleFromSource({provenance:{title:url}}),'');
 });
-test('shortcut has share input, clipboard fallback and only opens protected website',() => {
-  const w = workflow();assert.deepEqual(w.WFWorkflowNoInputBehavior,{Name:'WFWorkflowNoInputBehaviorGetClipboard',Parameters:{}});
-  assert.ok(w.WFWorkflowTypes.includes('ActionExtension'));
+test('shortcut explicitly reads clipboard and binds URL extraction to that output',() => {
+  const w = workflow();
   const actions = w.WFWorkflowActions.map(a=>a.WFWorkflowActionIdentifier);
-  assert.deepEqual(actions,['is.workflow.actions.gettext','is.workflow.actions.detect.link','is.workflow.actions.urlencode','is.workflow.actions.gettext','is.workflow.actions.openurl']);
-  assert.equal(w.WFWorkflowImportQuestions[0].ActionIndex,0);
+  assert.deepEqual(actions,['is.workflow.actions.getclipboard','is.workflow.actions.gettext','is.workflow.actions.detect.link','is.workflow.actions.urlencode','is.workflow.actions.gettext','is.workflow.actions.openurl']);
+  assert.equal(w.WFWorkflowImportQuestions[0].ActionIndex,1);
   assert.equal(w.WFWorkflowImportQuestions[0].ParameterKey,'WFTextActionText');
-  assert.equal(w.WFWorkflowActions[1].WFWorkflowActionParameters.WFInput.Value.Type,'ExtensionInput');
-  const text = w.WFWorkflowActions[3].WFWorkflowActionParameters.WFTextActionText.Value;
+  assert.equal(w.WFWorkflowActions[2].WFWorkflowActionParameters.WFInput.Value.OutputUUID,w.WFWorkflowActions[0].WFWorkflowActionParameters.UUID);
+  const text = w.WFWorkflowActions[4].WFWorkflowActionParameters.WFTextActionText.Value;
   for (const range of Object.keys(text.attachmentsByRange)) assert.equal(text.string[Number(range.match(/\d+/)[0])],'\ufffc');
   assert.ok(JSON.stringify(w).includes('/phone-collect/index.html#url='));
   assert.throws(()=>workflow('http://example.org'));

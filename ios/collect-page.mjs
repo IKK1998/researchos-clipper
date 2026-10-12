@@ -43,12 +43,14 @@ const code = document.querySelector('#auto-code');
 function showSetup() {
   try {code.textContent = localStorage.getItem(autoKey) || '';}
   catch {code.textContent = '';}
-  setupStatus.textContent = code.textContent ? '本浏览器已允许快捷指令自动收藏。将下面的码填入新版快捷指令；不要分享配置后的快捷指令。' : '尚未连接，普通粘贴仍需手动确认。';
+  setupStatus.textContent = code.textContent ? '连接码已准备好：复制下方连接码，填入新版快捷指令的安装设置。完成后重新复制文章链接，再运行快捷指令。' : '请按顺序点击开启、复制连接码，再下载新版快捷指令。只需设置一次。';
 }
 document.querySelector('#enable-auto').addEventListener('click',() => {
   try {
-    const bytes = crypto.getRandomValues(new Uint8Array(16));
-    localStorage.setItem(autoKey,Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join(''));
+    if (!/^[a-f0-9]{32}$/.test(localStorage.getItem(autoKey) || '')) {
+      const bytes = crypto.getRandomValues(new Uint8Array(16));
+      localStorage.setItem(autoKey,Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join(''));
+    }
     showSetup();
   } catch {setupStatus.textContent = '浏览器无法保存设置，请检查 Safari 存储权限。';}
 });
@@ -61,4 +63,7 @@ document.querySelector('#disable-auto').addEventListener('click',() => {
 });
 showSetup();
 if (autoInput) {input.value = autoInput;void save();}
-else if (new URLSearchParams(incomingHash.replace(/^#/,'')).has('key')) status('自动收藏未连接此浏览器。请完成下方一次性连接，或点确认收藏。',true);
+else if (new URLSearchParams(incomingHash.replace(/^#/,'')).has('key')) {
+  document.querySelector('#setup').open = true;
+  status(input.value ? '链接已收到。请完成下面的一次性连接；本次也可直接点确认收藏。' : '快捷指令没有传来文章链接。请更新下方的新版快捷指令、完成连接，再回微信复制文章链接后运行。',true);
+}

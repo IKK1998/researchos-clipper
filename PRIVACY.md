@@ -2,8 +2,8 @@
 
 ## iPhone Shortcut and same-origin collection page
 
-The signed shortcut accepts explicitly shared URLs/text; when no input is supplied,
-it reads the current clipboard only when the user runs it. It opens the configured
+The current signed shortcut explicitly reads the current clipboard as its first
+action, only when the user runs it. It opens the configured
 HTTPS website and passes input in a URL fragment. It has no API keys, cookies,
 SSH keys, model calls, scheduled triggers or clipboard history monitoring.
 
