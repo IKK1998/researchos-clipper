@@ -7,14 +7,17 @@ export function workflow(origin = 'https://researchos.cacdb.org') {
   const ids = ['F3F9D063-465C-4A05-9FB7-EF1D5A51B111','F3F9D063-465C-4A05-9FB7-EF1D5A51B222','F3F9D063-465C-4A05-9FB7-EF1D5A51B333'];
   const ref = (id) => ({WFSerializationType:'WFTextTokenAttachment',Value:{Type:'ActionOutput',OutputUUID:id,OutputName:'Result'}});
   const prefix = u.origin+'/phone-collect/index.html#url=';
+  const keyId = 'F3F9D063-465C-4A05-9FB7-EF1D5A51B000';
+  const linkText = prefix+'\ufffc&key=\ufffc';
   return {WFWorkflowName:'收藏到 ResearchOS',WFWorkflowClientVersion:'2700.0.4',WFWorkflowClientRelease:'4.0',WFWorkflowMinimumClientVersion:900,WFWorkflowMinimumClientVersionString:'900',WFWorkflowHasShortcutInputVariables:true,
     WFWorkflowIcon:{WFWorkflowIconStartColor:463140863,WFWorkflowIconGlyphNumber:59511},
     WFWorkflowTypes:['ActionExtension'],WFWorkflowInputContentItemClasses:['WFURLContentItem','WFStringContentItem','WFSafariWebPageContentItem'],
-    WFWorkflowNoInputBehavior:{Name:'WFWorkflowNoInputBehaviorGetClipboard',Parameters:{}},WFWorkflowImportQuestions:[],
+    WFWorkflowNoInputBehavior:{Name:'WFWorkflowNoInputBehaviorGetClipboard',Parameters:{}},WFWorkflowImportQuestions:[{ActionIndex:0,Category:'Parameter',ParameterKey:'WFTextActionText',DefaultValue:'PASTE_BROWSER_CONNECTION_CODE',Text:'粘贴手机收藏页提供的本机连接码（先在 Safari 开启自动收藏并复制连接码）'}],
     WFWorkflowActions:[
+      {WFWorkflowActionIdentifier:'is.workflow.actions.gettext',WFWorkflowActionParameters:{UUID:keyId,WFTextActionText:'PASTE_BROWSER_CONNECTION_CODE'}},
       {WFWorkflowActionIdentifier:'is.workflow.actions.detect.link',WFWorkflowActionParameters:{UUID:ids[0],WFInput:{WFSerializationType:'WFTextTokenAttachment',Value:{Type:'ExtensionInput'}}}},
       {WFWorkflowActionIdentifier:'is.workflow.actions.urlencode',WFWorkflowActionParameters:{UUID:ids[1],WFEncodeMode:'Encode',WFInput:ref(ids[0])}},
-      {WFWorkflowActionIdentifier:'is.workflow.actions.gettext',WFWorkflowActionParameters:{UUID:ids[2],WFTextActionText:{WFSerializationType:'WFTextTokenString',Value:{string:prefix+'\ufffc',attachmentsByRange:{['{'+prefix.length+', 1}']:ref(ids[1]).Value}}}}},
+      {WFWorkflowActionIdentifier:'is.workflow.actions.gettext',WFWorkflowActionParameters:{UUID:ids[2],WFTextActionText:{WFSerializationType:'WFTextTokenString',Value:{string:linkText,attachmentsByRange:{['{'+prefix.length+', 1}']:ref(ids[1]).Value,['{'+(prefix.length+6)+', 1}']:ref(keyId).Value}}}}},
       {WFWorkflowActionIdentifier:'is.workflow.actions.openurl',WFWorkflowActionParameters:{WFInput:ref(ids[2])}},
     ]};
 }

@@ -17,6 +17,14 @@ export function inputFromHash(hash) {
   if (params.getAll('url').length > 1) throw new Error('请一次分享一篇文章');
   return params.get('url') || '';
 }
+// Browser-local intent guard, NOT an API credential or a substitute for login.
+export function authorizedAutoInput(hash, localKey) {
+  const value = inputFromHash(hash);
+  const params = new URLSearchParams(hash.replace(/^#/,''));
+  if (params.getAll('key').length !== 1 || !/^[a-f0-9]{32}$/.test(localKey || '')
+      || params.get('key') !== localKey || !value) return '';
+  return articleFromText(value);
+}
 export function titleFromSource(source) {
   let p = source.provenance;
   if (typeof p === 'string') {try {p = JSON.parse(p);} catch {p = {};}}

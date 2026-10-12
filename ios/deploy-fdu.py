@@ -19,7 +19,7 @@ def main():
     args = parser.parse_args()
     os.umask(0o077)
     root = Path(args.root).resolve()
-    assert root.is_dir() and root != Path('/') and args.release.startswith('iphone-collect-')
+    assert root.is_dir() and root != Path('/') and args.release.startswith(('iphone-collect-', 'iphone-auto-'))
     rel = root / 'releases' / args.release
     code = rel / 'code'
     assert Path(__file__).resolve() == code / 'ios/deploy-fdu.py'
@@ -86,7 +86,7 @@ def main():
             time.sleep(2)
         else: raise RuntimeError('Web health failed')
         html = run(['docker','exec','aging-cachexia-researchos-gateway-1','wget','-q','-O','-','http://web:3000/phone-collect/index.html']).decode()
-        assert 'iphone-collect-20261012-v1' in html and '确认收藏' in html
+        assert args.release in html and '确认收藏' in html
         for filename in ['collect-core.mjs','collect-page.mjs','ResearchOS-Collect.shortcut']:
             content = run(['docker','exec','aging-cachexia-researchos-gateway-1','wget','-q','-O','-','http://web:3000/phone-collect/'+filename])
             assert hashlib.sha256(content).hexdigest() == hashlib.sha256((code/'ios'/filename).read_bytes()).hexdigest()

@@ -7,8 +7,15 @@ it reads the current clipboard only when the user runs it. It opens the configur
 HTTPS website and passes input in a URL fragment. It has no API keys, cookies,
 SSH keys, model calls, scheduled triggers or clipboard history monitoring.
 
-The page uses the existing website session. Only tapping Confirm sends an intake
-request with AI consent=false. A temporary sessionStorage draft keeps unsubmitted
+The page uses the existing website session. Tapping Confirm sends an intake
+request with AI consent=false. Alternatively, after explicit one-time opt-in,
+a shortcut carrying a matching browser-local connection code and a fresh valid
+article URL submits once automatically. The random code lives in localStorage
+and the user's private shortcut; it is an intent guard, not an API credential.
+It cannot replace website authentication. It is passed only in the fragment,
+never a query parameter. Do not share a configured shortcut. Disable or rotate
+the connection on the page to revoke the old code; a new browser must reconnect.
+Public downloads contain only a placeholder. A temporary sessionStorage draft keeps unsubmitted
 input within that tab; a failed request is not silently replayed. Fragments are
 removed from the visible URL after input is loaded, and the page sends no referrer.
 Keep the phone and browser account private. Draft persistence across phone restarts

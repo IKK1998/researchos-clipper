@@ -1,5 +1,25 @@
 # Verification
 
+## iPhone automatic collection update — 2026-10-12
+
+- Five-action shortcut with import-time browser connection code question; public
+  file contains a placeholder, not a user code. Official signing succeeded.
+  Import-question shape follows an exported shortcut source example:
+  https://github.com/extratone/i/blob/main/shortcuts/Generate%20Shortcuts%20Run%20Links%20List.json
+- 31 Node tests passed. Mock page controller verified one submission for a paired
+  fresh link, zero for wrong code, disabled connection or draft-only navigation.
+  Invalid URLs, duplicate fragment keys and login/offline receipts fail closed.
+- Published immutable `iphone-auto-20261012-v1` static Web-only overlay after
+  fresh FDU image/disk/rollback audit and exact seven-file dry-run transfer (~42KB).
+  Deployment reported IPHONE_WEB_ACTIVATED: HTTP asset hashes and Web health
+  passed; protected service fingerprints, API/anatomy files and model-call count
+  stayed unchanged. Recovery and rollback profiles preserved remotely.
+- Anonymous public request returns 302 (existing Access login), not a public API
+  bypass. No new live article submissions or model calls in this update.
+- Real iPhone import question, connection setup, Safari auto-submit, browser choice,
+  clipboard permission and reboot remain owner-device acceptance steps. Signing,
+  mock tests and server activation are not substitutes for real iOS acceptance.
+
 ## iPhone shortcut and static collection page — 2026-10-12
 
 - Generated a four-action share-input shortcut with explicit no-input clipboard
