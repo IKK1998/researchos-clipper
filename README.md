@@ -18,6 +18,7 @@ Clipper 改用用户授权的浏览器打开文章，读取与该链接对应的
 | --- | --- | --- |
 | Mac 快捷键版 0.6.0 | 在微信阅读，复制链接后按 Option+S | 已完成真实收藏、标题回写、关键词检索和 Hammerspoon 重启恢复验证 |
 | 浏览器扩展 0.6.1 | 使用已登录的公网 ResearchOS，不依赖本机 SSH 网关 | Chromium 隔离测试通过；真实公网登录、Windows/Edge 实机验收待完成 |
+| iPhone 快捷指令 | 系统分享或复制链接 → 手机收藏页确认 | 静态页面已在维护者 FDU 部署，实际去重/回读/检索通过；iPhone安装与微信分享实测待完成 |
 | 手机小程序开发版 | 微信复制链接 → 小程序粘贴收藏 | 配对、设备隔离和回读测试通过；未注册、未实机验收、未发布 |
 
 浏览器包请使用 **v0.6.1**。v0.6.0 扩展存在参数序列化问题，已被后续版本修复。
@@ -40,7 +41,72 @@ Clipper 改用用户授权的浏览器打开文章，读取与该链接对应的
 自动刷新；Clipper 不会修改网站前端。保存链接、取得标题、取得正文、生成摘要
 是四个不同状态，不能用其中一个状态代替其他状态。
 
-## 手机小程序开发版（尚未上线）
+## iPhone 快捷指令：无需注册公众号或小程序
+
+手机用 Safari 打开 [手机收藏页](https://researchos.cacdb.org/phone-collect/index.html)，
+用原来的授权账号登录，点击底部“下载 iPhone 收藏快捷指令”。
+文件已通过 Apple 官方 `shortcuts sign --mode anyone` 签名，不包含 API Token、
+SSH 凭据或个人收藏。安装完成后名称可能显示为 **ResearchOS-Collect**，可自行改名。
+
+两种使用方式：
+
+1. 有系统分享菜单：选择快捷指令 → 链接填入网站 → 点击“确认收藏”。
+2. 微信没有系统分享菜单：文章菜单“复制链接” → 运行快捷指令 → 确认收藏。
+   可将它添加到主屏幕或小组件，不需要打开电脑。快捷指令没有输入时读取当前
+   剪贴板，有分享输入时使用分享内容；不后台读取、不监控剪贴板历史。
+
+首次安装、剪贴板许可与网站登录由手机用户操作。安装文件只完成签名，
+**还没有用维护者的真实 iPhone 完成安装/分享/剪贴板/重启验收**。
+如果平台不允许从下载文件直接导入，可把仓库 `ios/ResearchOS-Collect.shortcut`
+保存到“文件”App后打开；不要假定所有 iOS 版本的导入入口完全相同。
+Safari 登录后如链接丢失，重新运行快捷指令或在收藏页长按粘贴。
+
+### 安全、保存状态和重启
+
+- 只有在网站点“确认收藏”才发送 POST；打开网址、分享预览不产生收藏。
+- 文章链接通过 URL fragment 带入页面，不进入服务器请求 URL；页面填入后清掉
+  fragment，只在该浏览器标签页 sessionStorage 留断网草稿，不写 Cookie 或后台密钥。
+- 页面使用现有同源 `/api/v1/intake` 和来源回读接口，保留网站 Access 保护。
+  不新增公开机器接口，不安装公众号接收服务，不部署小程序。
+- 此入口 `ai_consent=false`，不自动产生付费模型调用。不会承诺抓到受限的标题/正文。
+  已保存回执、来源回读、真实标题分别提示；网络失败不冒充保存成功。
+- 换手机可重新安装同一文件并登录网站，不靠 Mac 隧道或 Hammerspoon。
+  重启 iPhone 后无需启动桌面程序，但网站和手机网络仍须可用；重启实测待完成。
+  sessionStorage 是临时草稿，不保证手机重启后仍保留，请保留尚未提交的原链接。
+
+### 本轮执行清单与复现
+
+- [x] 明确 iPhone 入口，无公众号/小程序账号依赖。
+- [x] 分享输入、复制链接回退和无凭据签名文件。
+- [x] 同源手机收藏页：去重保存、来源回读、正文/标题状态不混淆。
+- [x] 29 项 Node 测试；不含真实 iOS UI 验收。
+- [x] 独立静态 Web 镜像覆盖层发布、回滚和其他服务指纹检查。
+- [x] 一篇已保存文章的实际去重/来源回读/标题关键词检索验收。
+- [ ] 用户 iPhone 安装、微信入口、断网、重启及换手机验收。
+
+源码在 `ios/`，测试在 `tests/ios.test.js`。构建签名文件：
+
+其他使用者需将生成器的 HTTPS origin 改为自己的已授权网站，并部署自己的
+同源收藏页；安装本仓库文件不会获得维护者网站权限。
+
+```sh
+node ios/build-shortcut.mjs
+shortcuts sign --mode anyone --input ios/ResearchOS-Collect.unsigned.shortcut --output ios/ResearchOS-Collect.shortcut
+npm test
+```
+
+签名需要 macOS 的系统服务权限；沙箱内可能返回误导性的格式错误，需在获准
+访问系统签名服务的环境执行。签名成功不等于动作已在 iPhone 上运行通过。
+部署 `ios/Dockerfile` 仅给既有 Web 镜像增加 `/phone-collect/` 静态资源，
+`ios/deploy-fdu.py` 需传入已审计的根目录、冻结镜像、标签和 Docker socket。
+新版本目录和 manifest 必须先核验，保留 `recovery.json`/`rollback.json`；不要
+把私有发布状态或镜像配置提交到公开仓库。`ios/accept-server.py` 仅对已有原链接
+做一次无模型的去重验收，不创建合成文章。
+
+[Apple：从其他 App 运行快捷指令](https://support.apple.com/guide/shortcuts/run-a-shortcut-from-another-app-apd163eb9f95/ios)
+· [Apple：命令行签名](https://support.apple.com/zh-cn/guide/shortcuts-mac/apd455c82f02/mac)
+
+## 手机小程序开发版（已暂停上线，保留源码）
 
 [`miniprogram/`](miniprogram/) 可导入微信开发者工具，与桌面版共用仓库。
 **只有公众号不等于已有小程序**。需要你自行注册小程序账号，完成平台要求的

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="no-referrer"><title>手机收藏 · ResearchOS</title>
+<style>
+:root{color-scheme:light;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#263d3f;background:#fafaf8}*{box-sizing:border-box}body{margin:0}main{width:min(100% - 40px,580px);margin:32px auto;padding-bottom:env(safe-area-inset-bottom)}header{padding:8px 0 20px;border-bottom:3px solid #344a4d}header a{color:inherit;text-decoration:none;font-weight:650}h1{font-size:30px;line-height:1.3;margin:30px 0 12px}p{line-height:1.7;color:#667270}label{display:block;font-weight:600;margin:24px 0 10px}textarea{width:100%;min-height:130px;border:1px solid #cdd5d2;border-radius:6px;background:white;padding:14px;font:inherit;line-height:1.5;resize:vertical}button,a.action{font:inherit;min-height:48px;padding:12px 16px;border:1px solid #cbd4d0;border-radius:5px;cursor:pointer;background:white;color:#344c49;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}button.primary{background:#344c49;color:white;border-color:#344c49;flex:1}button:disabled{opacity:.6;cursor:wait}.actions{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}.note{font-size:13px}#message{min-height:24px;overflow-wrap:anywhere}#message[role=alert]{color:#93473f}#result{padding:20px 0;border-top:1px solid #cdd5d2;margin-top:20px}#title{font-size:20px;line-height:1.5}footer{border-top:1px solid #cdd5d2;margin-top:28px;padding-top:16px;font-size:14px}a{color:#45665c}a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid #98b9ad;outline-offset:3px}[hidden]{display:none!important}
+</style></head><body><main data-release="iphone-collect-20261012-v1">
+<header><a href="/">ResearchOS · 手机收藏</a></header>
+<h1>看到值得读的文章，<br>先收藏下来。</h1>
+<p>使用原网站登录即可。核对链接后点一次收藏，不需要公众号或小程序账号。</p>
+<form><label for="article">公众号文章链接</label><textarea id="article" maxlength="8192" placeholder="分享的链接会填在这里；也可以长按粘贴" autocapitalize="off" spellcheck="false"></textarea>
+<div class="actions"><button type="button" id="paste">粘贴链接</button><button type="submit" id="save" class="primary">确认收藏</button></div></form>
+<p class="note">只在你点“粘贴链接”时读取剪贴板。此入口不调用模型；保存链接不等于正文或标题已获取。</p>
+<p id="message" role="status" aria-live="polite"></p>
+<section id="result" hidden><h2 id="title"></h2><p id="detail"></p><div class="actions"><a id="source" class="action" href="/help">查看资料</a><a id="original" class="action" target="_blank" rel="noopener noreferrer">打开原文</a></div></section>
+<footer><a href="./ResearchOS-Collect.shortcut" download>下载 iPhone 收藏快捷指令</a><p class="note">安装后可加入分享菜单或主屏幕。微信未提供系统分享时，复制链接后运行快捷指令即可。若登录后链接丢失，请重新运行或粘贴。</p><a href="/library">打开我的资料</a></footer>
+</main><script type="module" src="./collect-page.mjs"></script></body></html>

@@ -1,5 +1,19 @@
 # Privacy
 
+## iPhone Shortcut and same-origin collection page
+
+The signed shortcut accepts explicitly shared URLs/text; when no input is supplied,
+it reads the current clipboard only when the user runs it. It opens the configured
+HTTPS website and passes input in a URL fragment. It has no API keys, cookies,
+SSH keys, model calls, scheduled triggers or clipboard history monitoring.
+
+The page uses the existing website session. Only tapping Confirm sends an intake
+request with AI consent=false. A temporary sessionStorage draft keeps unsubmitted
+input within that tab; a failed request is not silently replayed. Fragments are
+removed from the visible URL after input is loaded, and the page sends no referrer.
+Keep the phone and browser account private. Draft persistence across phone restarts
+is not guaranteed. Website records are not deleted when the shortcut is removed.
+
 ## Mini-program development preview
 
 Clipboard reading occurs only after an explicit Paste tap and, where supported,

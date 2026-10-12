@@ -1,5 +1,31 @@
 # Verification
 
+## iPhone shortcut and static collection page — 2026-10-12
+
+- Generated a four-action share-input shortcut with explicit no-input clipboard
+  fallback; Apple official signing command succeeded with system-service access.
+  Plain sandbox signing misleadingly reported a file-format error. Import preview
+  showed four actions in Mac Shortcuts; final Add/UI verification timed out, so
+  Mac installation, iCloud synchronization and iPhone installation are unconfirmed.
+- Corrected the clipboard fallback identifier after preview showed Continue;
+  regenerated/re-signed and released a new v2 without overwriting v1.
+- Node22.21.0: 29 tests passed (five iOS, seven mini, 15 official-account, two
+  extension). Included long-URL encoding, unsafe inputs, AI=false, same-origin,
+  offline/login failure, invalid receipts and mismatched readback handling.
+- Owner approved Web-only release and one already-saved real article acceptance.
+  FDU was audited before writes. Explicit seven-file transfer including manifest,
+  about 39KB, dry-run first; no database, corpus, secrets or broad synchronization.
+- Remote static overlay v2 activated; page/JS/shortcut hashes verified over actual
+  HTTP responses. Web health passed, other ResearchOS/tunnel service fingerprints
+  unchanged, API route and anatomy hashes unchanged, model-call count unchanged
+  during release. Existing private Access policy was not edited.
+- Existing owner-selected article: actual gateway intake returned saved=true,
+  duplicate=true and original source ID; source readback/title and keyword search
+  succeeded. No new source created, AI consent=false. Not an authenticated iPhone
+  Safari click test; do not conflate server acceptance with mobile acceptance.
+- Pending: real iPhone import, Safari/WeChat share entry, clipboard permission,
+  first login/fragment preservation, offline interaction and whole-phone restart.
+
 ## Mini-program development preview — 2026-10-12
 
 - Added a one-page mini-program and independent loopback collector in the existing
