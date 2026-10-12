@@ -1,5 +1,32 @@
 # Verification
 
+## Mobile official-account receiver preview — 2026-10-12
+
+- Added `mobile/` in the existing desktop-clipper repository; no separate server
+  database for articles, new npm dependencies, model calls or remote deployment.
+- `npm test`: 17 tests passed on Node22.21.0, including 15 mobile tests and two
+  existing extension suites. An initial sandbox prevented loopback binding;
+  the permitted isolated loopback run passed. This is not a production error.
+- Actual HTTP fixture flow checked encrypted callback → bounded persistent queue
+  → authenticated mock intake → source/title readback. AI consent=false;
+  duplicate message processing and existing-title preservation were tested.
+- An independent public wechatpy cipher/signature test vector passed. It checks
+  AES framing compatibility, not live official-account forwarding permissions.
+- Actual child receiver was killed and restarted using a synthetic queue; one
+  persistent job and its original title survived. A concurrent live receiver
+  was rejected. No real machine/server reboot or startup service was tested.
+- Unauthorized sender, recipient/AppID/signature mismatch, stale input, unsafe
+  URL/XML, plaintext POST, multiple links, wrong source readback and retry limit
+  were covered. No live article was fetched or submitted to ResearchOS.
+- User has an official account but its server configuration/permissions have
+  not been inspected. HTTPS routing, secret configuration, real phone forwarding,
+  public website search acceptance and deployment remain pending. Existing
+  official-account callbacks must be preserved until impact is reviewed.
+- First receipt says accepted/queued, not saved. Background-completion proactive
+  WeChat notification is not implemented. URL-only messages can lack titles.
+- New Goal creation was refused because the current thread has an unfinished
+  older Goal. No false completion or Goal replacement was performed.
+
 ## Browser preview 0.6.1 — 2026-10-09
 
 - Real bundled Chromium loaded the actual MV3 extension and passed title capture

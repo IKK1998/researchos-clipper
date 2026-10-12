@@ -1,0 +1,20 @@
+# Template only: not installed. Confirm absolute paths and service manager first.
+# Linux user service; boot-after-logout requires approved lingering.
+[Unit]
+Description=ResearchOS Clipper official-account receiver
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/researchos-clipper
+EnvironmentFile=/etc/researchos-clipper/receiver.env
+ExecStart=/usr/bin/node /opt/researchos-clipper/mobile/wechat-server.js
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=40
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

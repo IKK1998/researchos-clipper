@@ -27,3 +27,23 @@ Remove the browser extension to delete its local queue. To uninstall the Mac
 version, remove the managed ResearchClipper block from Hammerspoon init.lua and
 the ResearchClipper.spoon directory; reload Hammerspoon. Preserve unrelated Spoons
 and login/tunnel settings. Server records remain in your ResearchOS.
+
+## Optional official-account receiver (development preview)
+
+The mobile receiver accepts only encrypted, signed official-account callbacks
+from explicitly allowed OpenIDs, for the configured application/recipient.
+It is not a personal-WeChat bot and does not scan chats, likes or clipboard
+history. Only a supported article URL and a title supplied by the message go
+to ResearchOS; AI consent is always false.
+
+Callback bodies exist transiently in memory. A bounded persistent server queue
+retains URLs, titles, timestamps, states and source receipts, with a hashed
+sender/message key rather than raw OpenIDs. Private configuration holds allowed
+OpenIDs, callback Token/AESKey and the ResearchOS API credential. No AppSecret
+is required by this passive-reply implementation. Desktop statements about not
+storing API keys do not describe this server-only module.
+
+Logs omit message bodies, URLs, titles, identities and secrets. HTTPS is still
+required. Protect and back up the queue, define retention, and archive completed
+receipts before the 1,000-record limit. Stopping the receiver does not delete
+website records. Production configuration and queues must never enter Git.

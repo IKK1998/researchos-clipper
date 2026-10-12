@@ -6,3 +6,8 @@ artifacts/
 __pycache__/
 *.pyc
 node_modules/
+mobile/private/
+mobile/queue/
+*.secret
+receiver.lock
+receiver-start.lock
