@@ -9,6 +9,7 @@ import sys
 parser = argparse.ArgumentParser()
 parser.add_argument('--login', action='store_true', help='Enable Hammerspoon launch at login')
 parser.add_argument('--dry-run', action='store_true')
+parser.add_argument('--sync-library-titles', action='store_true', help='Opt in to repair recent phone/web WeChat titles with this Mac')
 args = parser.parse_args()
 if sys.platform != 'darwin':
     raise SystemExit('Use extension/ on Windows and Linux.')
@@ -46,6 +47,9 @@ settings = [line.strip() for line in managed.splitlines()
 if not settings:
     settings = ["spoon.ResearchClipper.mods={'alt'}", "spoon.ResearchClipper.key='S'",
                 "spoon.ResearchClipper.aiConsent=false"]
+if args.sync_library_titles:
+    settings = [line for line in settings if not line.startswith('spoon.ResearchClipper.syncLibraryTitles=')]
+    settings.append('spoon.ResearchClipper.syncLibraryTitles=true')
 block = '\n'.join([start, "hs.loadSpoon('ResearchClipper')", *settings,
     'spoon.ResearchClipper.autoTitle=true',
     *(['hs.autoLaunch(true)'] if args.login or 'hs.autoLaunch(true)' in managed else []),

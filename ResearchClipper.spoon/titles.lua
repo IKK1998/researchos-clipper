@@ -139,6 +139,38 @@ function T.new(owner)
       if job.state=='verification' and job.window then self.active=true;self:poll(job,30);return end
     end
   end
+  -- Opt-in bridge for owner-saved phone/web links; never reads the clipboard.
+  -- Bounded to the 50 most recent WeChat matches, with no new intake/model calls.
+  function self:syncLibrary()
+    if self.stopped or self.syncing or not self.owner.syncLibraryTitles then return end
+    if not logic.endpoint(self.owner.baseURL) then return end
+    self.syncing=true
+    local complete=false
+    local timeout=hs.timer.doAfter(30,function()
+      complete=true;self.syncing=false
+    end)
+    hs.http.doAsyncRequest(self.owner.baseURL .. '/api/v1/library?q=https%3A%2F%2Fmp.weixin.qq.com&limit=50&offset=0',
+      'GET','',{['Accept']='application/json',['Origin']=self.owner.baseURL,['Cache-Control']='no-store'},function(code,body)
+        if complete or self.stopped then return end
+        complete=true;timeout:stop();self.syncing=false
+        local ok,data=pcall(hs.json.decode,body)
+        if code~=200 or not ok or type(data)~='table' or type(data.items)~='table' then return end
+        for index,item in ipairs(data.items) do
+          if index>50 then break end
+          if type(item)=='table' then
+            local id=item.source_id
+            local url=logic.link(item.original_value or '')
+            local known=false
+            for _,job in ipairs(self.jobs) do if job.id==id or job.url==url then known=true;break end end
+            if item.source_kind=='wechat' and item.record_type=='source' and url and type(id)=='string'
+                and id:match('^%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x$')
+                and logic.title(item.title or '')=='' and not known then
+              self:add(id,url,'')
+            end
+          end
+        end
+      end,false)
+  end
   function self:add(id,url,title)
     if not logic.link(url) then return end
     for _,job in ipairs(self.jobs) do
@@ -194,10 +226,16 @@ function T.new(owner)
     self:persist()
     self.tick=hs.timer.doEvery(60,function() self:next() end)
     self.boot=hs.timer.doAfter(3,function() self:next() end)
+    if self.owner.syncLibraryTitles then
+      self.syncTick=hs.timer.doEvery(60,function() self:syncLibrary() end)
+      self.syncBoot=hs.timer.doAfter(5,function() self:syncLibrary() end)
+    end
   end
   function self:stop()
     self.stopped=true
-    for _,timer in ipairs({self.tick,self.boot,self.pollTimer}) do if timer then timer:stop() end end
+    for _,key in ipairs({'tick','boot','pollTimer','syncTick','syncBoot'}) do
+      if self[key] then self[key]:stop() end
+    end
     self:persist()
   end
   return self

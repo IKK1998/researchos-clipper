@@ -1,5 +1,26 @@
 # Verification
 
+## Phone-to-desktop title bridge — 2026-10-14
+
+- Diagnosed the missing handoff: iPhone saves URL-only records, whereas the Mac
+  queue previously only accepted local hotkey submissions. Refreshing the website
+  cannot manufacture missing server metadata.
+- Added explicitly opted-in, bounded recent-library polling (50 WeChat records,
+  every 60 seconds). Existing exact-URL/source readback and metadata-only capture
+  are reused. No new intake request, model invocation or corpus scan.
+- Six Lua suites passed in isolated environments inside the installed Hammerspoon
+  Lua runtime, including the new bridge tests. No global mock replaced live `hs`.
+- Installed three allowlisted Spoon files with a timestamped configuration backup;
+  activated only the idle title queue, without restarting Codex, Hammerspoon,
+  website services or other tasks. Login startup was observed enabled.
+- Initial actual API readback: 42 matching records, seven URL-title fallbacks.
+  Subsequent readback: six fallbacks; one real title repair observed. Additional
+  queue items were still pending, and a verification state was observed. This is
+  not a claim that all 42 sources or all phone cases are accepted.
+- Whole-host restart, Mac-offline independent title capture and a fresh physical
+  iPhone submission remain unverified. The public GitHub release is not updated
+  by this local installation.
+
 ## iPhone clipboard and library-link fix — 2026-10-12
 
 - Owner screenshot showed blank input and unpaired-browser message. Replaced

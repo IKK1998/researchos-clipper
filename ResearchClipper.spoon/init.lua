@@ -6,6 +6,7 @@ obj.aiConsent=false
 obj.mods={'ctrl','alt','cmd'}
 obj.key='S'
 obj.autoTitle=true
+obj.syncLibraryTitles=false -- Explicit opt-in: use this Mac for phone/web title repair.
 
 -- Text is supplied by the owner through an explicit clipboard action. Never
 -- monitor the clipboard or silently attach it to an old collection.
